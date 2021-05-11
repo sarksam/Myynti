@@ -6,13 +6,13 @@ public class Asiakas {
 	public Asiakas() {
 		super();
 	}
-	public Asiakas(String etunimi, String sukunimi, String puhelin, String sposti, int asiakas_id) {
+	public Asiakas(int asiakas_id, String etunimi, String sukunimi, String puhelin, String sposti) {
 		super();
+		this.asiakas_id = asiakas_id;
 		this.etunimi = etunimi;
 		this.sukunimi = sukunimi;
 		this.puhelin = puhelin;
 		this.sposti = sposti;
-		this.asiakas_id = asiakas_id;
 	}
 	public String getEtunimi() {
 		return etunimi;
@@ -46,8 +46,8 @@ public class Asiakas {
 	}
 	@Override
 	public String toString() {
-		return "Asiakas [etunimi=" + etunimi + ", sukunimi=" + sukunimi + ", puhelin=" + puhelin + ", sposti=" + sposti
-				+ ", asiakas_id=" + asiakas_id + "]";
+		return "Asiakas [asiakas_id=" + asiakas_id + ", etunimi=" + etunimi + ", sukunimi=" + sukunimi + ", puhelin="
+				+ puhelin + ", sposti=" + sposti + "]";
 	}
 	
 	

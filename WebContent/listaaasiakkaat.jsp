@@ -15,9 +15,9 @@
 			<th colspan="5" class="oikealle"><span id="uusiAsiakas">Lis‰‰ uusi asiakas</span></th>
 		</tr>
 		<tr>
-			<th class="oikealle">Hakusana:</th>
-			<th colspan="3"><input type="text" id="hakusana"></th>
-			<th><input type="button" value="Hae" id="hakunappi"></th>
+			<th colspan="3" class="oikealle">Hakusana:</th>
+			<th><input type="text" id="hakusana"></th>
+			<th><input type="button" id="hae" value="Hae"></th>
 		</tr>			
 		<tr>
 			<th>Etunimi</th>
@@ -37,21 +37,24 @@ $(document).ready(function(){
 		document.location="lisaaasiakas.jsp";
 	});
 	
-	haeAsiakkaat();
-	$("#hakunappi").click(function(){		
-		haeAsiakkaat();
-	});
 	$(document.body).on("keydown", function(event){
 		  if(event.which==13){ //Enteri‰ painettu, ajetaan haku
 			  haeAsiakkaat();
 		  }
 	});
+	
+	haeAsiakkaat();
+	$("#hae").click(function(){		
+		haeAsiakkaat();
+	});
+
 	$("#hakusana").focus();//vied‰‰n kursori hakusana-kentt‰‰n sivun latauksen yhteydess‰
+	haeAsiakkaat();
 });
 
 function haeAsiakkaat() {
 	$("#listaus tbody").empty();
-	$.ajax({url:"myynti/"+$("#hakusana").val(), type:"GET", dataType:"json", success:function(result){//Funktio palauttaa tiedot json-objektina
+	$.getJSON({url:"myynti/"+$("#hakusana").val(), type:"GET", dataType:"json", success:function(result){//Funktio palauttaa tiedot json-objektina
 		$.each(result.asiakkaat, function(i, field){  
         	var htmlStr;
         	htmlStr+="<tr id='rivi_"+field.asiakas_id+"'>";
@@ -60,7 +63,7 @@ function haeAsiakkaat() {
         	htmlStr+="<td>"+field.puhelin+"</td>";
 			htmlStr+="<td>"+field.sposti+"</td>";
 			htmlStr+="<td><a href='muutaasiakas.jsp?asiakas_id="+field.asiakas_id+"'>Muuta</a>&nbsp;";
-			htmlStr+="<span class='poista' onclick=poista('"+field.asiakas_id+",'"+field.etunimi+"','"+field.sukunimi+"')>Poista</span></td>";
+			htmlStr+="<span class='poista' onclick=poista("+field.asiakas_id+",'"+field.etunimi+"','"+field.sukunimi+"')>Poista</span></td>";
         	htmlStr+="</tr>";
         	$("#listaus tbody").append(htmlStr);
         });	

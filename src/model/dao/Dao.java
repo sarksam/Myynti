@@ -1,9 +1,11 @@
 package model.dao;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+
 import model.Asiakas;
 
 public class Dao {
@@ -70,8 +72,7 @@ public class Dao {
 				stmtPrep.setString(3, "%" + hakusana + "%");
 				stmtPrep.setString(4, "%" + hakusana + "%"); 
         		rs = stmtPrep.executeQuery();   
-				if(rs!=null){ //jos kysely onnistui
-					//con.close();					
+				if(rs!=null){ //jos kysely onnistui				
 					while(rs.next()){
 						Asiakas asiakas = new Asiakas();
 						asiakas.setAsiakas_id(rs.getInt(1));
@@ -124,22 +125,18 @@ public class Dao {
 		return paluuArvo;
 	}
 	
-	public Asiakas etsiAsiakas(String asiakas_id) {
+	public Asiakas etsiAsiakas(int asiakas_id) {
 		Asiakas asiakas = null;
 		sql = "SELECT * FROM asiakkaat WHERE asiakas_id=?";       
 		try {
 			con=yhdista();
 			if(con!=null){ 
 				stmtPrep = con.prepareStatement(sql); 
-				stmtPrep.setString(1, asiakas_id);
+				stmtPrep.setInt(1, asiakas_id);
         		rs = stmtPrep.executeQuery();  
-        		if(rs.isBeforeFirst()){ //jos kysely tuotti dataa, eli rekNo on käytössä
+        		if(rs.isBeforeFirst()){ //jos kysely tuotti dataa, eli asiakas_id on käytössä
         			rs.next();
-        			asiakas = new Asiakas();        			
-        			asiakas.setEtunimi(rs.getString(1));
-					asiakas.setSukunimi(rs.getString(2));
-					asiakas.setPuhelin(rs.getString(3));	
-					asiakas.setSposti(rs.getString(4));       			      			
+        			asiakas = new Asiakas(rs.getInt("asiakas_id"), rs.getString("etunimi"), rs.getString("sukunimi"), rs.getString("puhelin"), rs.getString("sposti"));       			      			
 				}        		
 			}	
 			con.close();  
@@ -149,7 +146,7 @@ public class Dao {
 		return asiakas;
 	}
 	
-	public boolean muutaAsiakas(Asiakas asiakas, String asiakas_id){
+	public boolean muutaAsiakas(Asiakas asiakas){
 		boolean paluuArvo=true;
 		sql="UPDATE asiakkaat SET etunimi=?, sukunimi=?, puhelin=?, sposti=? WHERE asiakas_id=?";						  
 		try {
@@ -159,6 +156,7 @@ public class Dao {
 			stmtPrep.setString(2, asiakas.getSukunimi());
 			stmtPrep.setString(3, asiakas.getPuhelin());
 			stmtPrep.setString(4, asiakas.getSposti());
+			stmtPrep.setInt(5, asiakas.getAsiakas_id());
 			stmtPrep.executeUpdate();
 	        con.close();
 		} catch (Exception e) {				

@@ -32,18 +32,18 @@
 				<td><input type="text" name="puhelin" id="puhelin"></td>
 				<td><input type="text" name="sposti" id="sposti"></td>
 				<td><input type="submit" id="tallenna" value="Lis‰‰"></td>
+			</tr>
 		</tbody>
 	</table>
 </form>
 <span id="ilmo"></span>
-</body>
 <script>
 $(document).ready(function() {
 	$("#takaisin").click(function(){
 		document.location="listaaasiakkaat.jsp";
 	});
 	
-	
+	// Lomakkeen tietojen validointi / tarkistus. Lomakkeen tietojen ollessa ok, kutsutaan listaaTiedot()-funktiota
 	$("#tiedot").validate({
 		rules: {
 			etunimi:	{
@@ -93,13 +93,14 @@ function lisaaTiedot(){
 		var formJsonStr = formDataJsonStr($("#tiedot").serializeArray()); //muutetaan lomakkeen tiedot json-stringiksi
 		console.log(formJsonStr);
 		$.ajax({url:"myynti", data:formJsonStr, type:"POST", dataType:"json", success:function(result) { //result on joko {"response:1"} tai {"response:0"}
-			if(result.response==0) {
-			$.("#ilmo").html("Asiakkaan lis‰‰minen ep‰onnistui.");
-		}else if(result.response==1){
-				$("#ilmo").html("Asiakkaan lis‰‰minen onnistui.");
-				$("#etunimi", "#sukunimi", "#puhelin", "#sposti").val("");
-				}
-		}});
-}
+			if(result.response==0){
+	        	$("#ilmo").html("Asiakkaan lis‰‰minen ep‰onnistui.");
+	        }else if(result.response==1){			
+	        	$("#ilmo").html("Asiakkaan lis‰‰minen onnistui.");
+	        	$("#etunimi, #sukunimi, #puhelin, #sposti").val("");
+			}
+	    }});	
+	}
 </script>
+</body>
 </html>
