@@ -36,5 +36,6 @@ table th {
 #uusiAsiakas, #takaisin{
 	color: white;	
 	cursor: pointer;	
+	text-decoration: none;
 }
 
